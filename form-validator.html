@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Validator</title>
+    <style>
+        .form-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        input.valid {
+            border-color: #28a745;
+        }
+        
+        input.invalid {
+            border-color: #dc3545;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        button[type="submit"]:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Sign Up Form</h2>
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter username">
+                <div class="error-message" id="usernameError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" id="email" placeholder="Enter email">
+                <div class="error-message" id="emailError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Passoword</label>
+                <input type="text" id="password" placeholder="Enter password">
+                <div class="error-message" id="passwordError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="cpassword">Confirmed Passoword</label>
+                <input type="text" id="cpassword" placeholder="Confirm password">
+                <div class="error-message" id="cpasswordError"></div>
+            </div>
+            
+            <button type="button" onclick="validateForm()">Check</button>
+            <button type="submit" id="submitBtn" disabled>Sign Up</button>
+        </form>
+    </div>
+
+    <script>
+        // TODO: Implement validation functions
+        
+        function validateUsername(username) {
+            // TODO: Check length (4-20) and alphanumeric
+            const usernameRegex = /^[a-zA-Z0-9]{4,20}$/;
+
+            if(usernameRegex.test(username)){
+                clearError('username');
+                return true;
+            }
+            else{
+                showError('username', 'Your name is incorrect! Try again');
+                return false;
+            }
+        }
+        
+        function validateEmail(email) {
+            // TODO: Use regex for email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if(emailRegex.test(email)){
+                clearError('email');
+                return true;
+            }
+            else{
+                showError('email', 'Your email is incorrect! Try again');
+                return false;
+            }
+        }
+        
+        function validatePassword(password) {
+            // TODO: Check length >= 8, has uppercase, has number
+            passwordRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+            if(passwordRegex.test(password)){
+                clearError('password');
+                return true;
+            }
+            else{
+                showError('password', 'Incorrect password! need at least 8 character, 1 uppercase and has number');
+                return false;
+            }
+
+        }
+        
+        function validatePasswordMatch(pass1, pass2) {
+            // TODO: Compare passwords
+            if(pass1 == pass2 && pass1 != null && pass2 != null){
+                clearError('cpassword')
+                return true;
+            }
+            else{
+                showError('cpassword', 'Passwords are not match!');
+                return false;
+            }
+            
+        }
+        
+        function showError(fieldId, message) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            const inputElement = document.getElementById(fieldId);
+            
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+            inputElement.classList.add('invalid');
+            inputElement.classList.remove('valid');
+        }
+        
+        function clearError(fieldId) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            const inputElement = document.getElementById(fieldId);
+            
+            errorElement.textContent = '';
+            errorElement.classList.remove('show');
+            inputElement.classList.remove('invalid');
+            inputElement.classList.add('valid');
+        }
+        
+        function validateForm() {
+            let isValid = true;
+            isValid = validateUsername(document.getElementById('username').value) && isValid;
+            isValid = validateEmail(document.getElementById('email').value) && isValid;
+            isValid = validatePassword(document.getElementById('password').value) && isValid;
+            isValid = validatePasswordMatch(
+                document.getElementById('password').value,
+                document.getElementById('cpassword').value
+            ) && isValid;
+            document.getElementById('submitBtn').disabled = !isValid;
+            return isValid;
+        }
+        
+        // TODO: Add event listeners for real-time validation
+        
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // TODO: Handle form submission
+            if(validateForm()){
+                alert('Form submitted successful');
+            }
+        });
+    </script>
+</body>
+</html>
